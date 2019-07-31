@@ -20,12 +20,16 @@ var _spam = 0;
 var _host = window.location.hostname;
 var _def_ = {
     'twitter.com': {
-        interval: 300,
+        scanInterval: 300,
         wheelInterval: 2000
     },
+    'www.ptt.cc': {
+        scanInterval: 300,
+        wheelInterval: 90000
+    },
     'www.youtube.com': {
-        interval: 100,
-        wheelInterval: 2000
+        scanInterval: 100,
+        wheelInterval: 1000
     }
 };
 var _scan = {
@@ -37,7 +41,7 @@ var _scan = {
                 lock: true,
                 type: 'default',
                 offset: 25,
-                description: 'Generic Tweet'
+                comment: 'Generic Tweet'
             },
             {
                 name: 'js-stream-item stream-item stream-item js-pinned',
@@ -45,7 +49,7 @@ var _scan = {
                 lock: true,
                 type: 'default',
                 offset: 25,
-                description: 'Pin Text'
+                comment: 'Pin Text'
             },
             {
                 name: 'TwitterCardsGrid TwitterCard TwitterCard--animation',
@@ -53,7 +57,19 @@ var _scan = {
                 lock: true,
                 type: 'default',
                 offset: 25,
-                description: 'Card Text'
+                comment: 'Card Text'
+            }
+        ]
+    },
+    'www.ptt.cc': {
+        class: [
+            {
+                name: 'push',
+                iframes: ['default'],
+                lock: true,
+                type: 'default',
+                offset: 0,
+                comment: 'Comment Text'
             }
         ]
     },
@@ -65,7 +81,7 @@ var _scan = {
                 lock: true,
                 type: 'default',
                 offset: 25,
-                description: 'Recommend Element'
+                comment: 'Recommend Element'
             },
             {
                 name: 'ytd-video-renderer',
@@ -73,7 +89,7 @@ var _scan = {
                 lock: true,
                 type: 'default',
                 offset: 25,
-                description: 'Search Recommend Element'
+                comment: 'Search Item Element'
             },
             {
                 name: 'ytd-grid-video-renderer',
@@ -81,15 +97,15 @@ var _scan = {
                 lock: true,
                 type: 'default',
                 offset: 25,
-                description: 'Tab Recommend Element'
+                comment: 'Tab Recommend Element'
             },
             {
                 name: 'ytd-comment-renderer',
                 iframes: ['default'],
                 lock: true,
                 type: 'default',
-                offset: 50,
-                description: 'Generic Comment Text'
+                offset: 25,
+                comment: 'Generic Comment Text'
             },
             {
                 name: 'yt-live-chat-text-message-renderer',
@@ -97,7 +113,7 @@ var _scan = {
                 lock: false,
                 type: 'reverse',
                 offset: 25,
-                description: 'Live Chat Message Text'
+                comment: 'Live Chat Message Text'
             }
         ]
     }
@@ -204,6 +220,7 @@ window.addEventListener("wheel", function(e) {
         if (new Date().getTime() - _time > interval) {
             _time = new Date().getTime();
             index = [];
+            removeSpamElementHandler();
             console.log("Wheel Reset");
         }
     }
@@ -213,5 +230,5 @@ window.addEventListener("wheel", function(e) {
     "use strict";
     _scan = _scan[_host] ? _scan[_host] : false;
     _def_ = _def_[_host] ? _def_[_host] : false;
-    if (_scan) setInterval(removeSpamElementHandler, Number.isInteger(_def_.interval) ? _def_.interval : 300);
+    if (_scan) setInterval(removeSpamElementHandler, Number.isInteger(_def_.scanInterval) ? _def_.scanInterval : 300);
 })();
